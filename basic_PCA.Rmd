@@ -13,22 +13,44 @@ knitr::opts_chunk$set(echo = TRUE)
 
 PCA is an exploratory analysis that allows you to identify the ordination axes that explain the greatest amount of variation in your data. For PCA, you need continuous data (or something that your field considers continuous, like 1-10 ranking scales for emotions -- hi Madi!). There are many other ordination analyses you can do with non-continuous data but we'll start with PCA.
 
-We'll use a subset of the linear morphometric dataset from my paper on cervical vertebra shape in ruminant mammals -- strangely enough, the only paper I've published so far where I <i>didn't</> include a PCA! But the data are a useful PCA practice set because I have many linear measurements of different vertebral features across ~50 species, including males and females as well as members of different "fighting behavior" categories. 
+We'll use a subset of the linear morphometric dataset from my paper on cervical vertebra shape in ruminant mammals -- strangely enough, the only paper I've published so far where I *didn't* include a PCA! But the data are a useful PCA practice set because I have many linear measurements of different vertebral features across ~50 species, including males and females as well as members of different "fighting behavior" categories. 
 
 My question is: do species that ram horns head-on (ighorn sheep, bison, etc) have differently shaped cervical vertebrae than species that lock horns and wrestle (antelope, deer, etc)? My first step when analyzing these data is to peform a PCA in order to visualize the major axes of variation among and across these groups.
 
 So, to load the data: 
 
-```{r data}
+```{r}
+#load data
+```
+
+Adjust the data - I miss tibbles!
+
+```{r}
 
 ```
 
-## Including Plots
+## `prcomp
 
-You can also embed plots, for example:
+Do the PCA
 
 ```{r pressure, echo=FALSE}
 plot(pressure)
 ```
 
-Note that the `echo = FALSE` parameter was added to the code chunk to prevent printing of the R code that generated the plot.
+Look at the PCA results
+```{r}
+summary(prcomp)
+```
+
+```{r}
+scree plot
+```
+
+Plot the stuff!
+```{r}
+regular plot
+```
+```{r}
+autoplot fun stuff
+```
+
