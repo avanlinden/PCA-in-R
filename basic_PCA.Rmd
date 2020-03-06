@@ -11,7 +11,7 @@ knitr::opts_chunk$set(echo = TRUE)
 
 ## Principal Components Analysis
 
-PCA is an exploratory analysis that allows you to identify the ordination axes that explain the greatest amount of variation in your data. For PCA, you need continuous data (or something that your field considers continuous, like emotion intensity on a scale of 1-100 -- hi Madi!). There are other ordination analyses you can do with non-continuous data but we'll start with PCA.
+PCA is an exploratory analysis that allows you to identify the ordination axes that explain the greatest amount of variation among interrelated variables in your data. For PCA, you need continuous data (or something that your field considers continuous, like emotion intensity on a scale of 1-100 -- hi Madi!). There are other ordination analyses you can do with non-continuous data but we'll start with PCA.
 
 We'll use a subset of the linear morphometric dataset from my paper on cervical vertebra shape in ruminant mammals -- strangely enough, the only paper I've published so far where I *didn't* include a PCA! But the data are a useful PCA practice set because I have many linear measurements of different vertebral features across 40 species, including males and females as well as members of different "fighting behavior" categories. 
 
@@ -37,7 +37,7 @@ vertData_tbl
 
 These data are a subset of my ruminant mammal linear morphometrics dataset -- basically, I spent months in museum basements measuring different parts of seven cervical vertebrae from 100+ individual sheep, goat, deer, and antelope skeletons. The measurement data (value) are identified by museum catalog numbers (catNum) and then by vertebra number (C2-C7), as well as which particular feature was measured (measure). I then joined the measurement data with other data for each individual, including body mass, sex, and fighting style. This subset includes animals from two fighting styles: ram and wrestle. 
 
-Before we do PCA, we can tidy the data a bit with some easy-breezy dplyr functions. I like to use the pipe function (denoted by %>% ) from the magrittr package, because it lets me manipulate tibbles one step at a time without saving a new object every time. The ' %>% ' operator can be read as 'and then'; e.g., take an object 'and then' do something to it, 'and then' do something else to it. 
+Before we do PCA, we can filter and tidy the data a bit with some easy-breezy dplyr functions. I like to use the pipe function (denoted by %>% ) from the magrittr package, because it lets me manipulate tibbles one step at a time without saving a new object every time. The ' %>% ' operator can be read as 'and then'; e.g., take an object 'and then' do something to it, 'and then' do something else to it. 
 
 ```{r}
 vertData_tbl %>%  # take our vertData_tbl 'and then' do the following:
@@ -56,8 +56,7 @@ vertData_tbl %>%  # take our vertData_tbl 'and then' do the following:
       "preZD" = "preZygDist",
       "TPLA" = "transProcessLeverArm"
       )
-  )) %>%
-  select(catNum, vertebra, measure, measureName, value, logValue, sex, spp, logBodyMass = logBMSS, fightStyle) #select columns in different order, rename body mass column
+  )) 
 ```
 
 The pipe function allows me to tidy my data step by step without saving or rewriting the initial dataframe each time, so I can make sure all my filters work the way I want to. Once I have it in the version I want, I'll save it as a new object that we can use for the PCA.
@@ -81,23 +80,12 @@ vertData <-
       "TPLA" = "transProcessLeverArm"
     )
   )) %>%
-  select(
-    catNum,
-    vertebra,
-    measure,
-    measureName,
-    value,
-    logValue,
-    sex,
-    spp,
-    logBodyMass = logBMSS,
-    fightStyle
-  ) 
+  select(catNum, measureName,logValue, sex, spp, logBodyMass = logBMSS, fightStyle) #select columns we want in different order, rename body mass column
 
 vertData #view the new tibble
 ```
 
-We now have a tibble with 792 rows and 10 columns. If we want we can examine the tibble with the function **distinct** to see how many variables we have and how many species we have.
+We now have a tibble with 792 rows and 7 columns. If we want we can examine the tibble with the function **distinct** to see how many variables we have and how many species we have.
 
 ```{r}
 vertData %>% 
@@ -113,10 +101,23 @@ So we have 88 individuals, 40 species, and 9 variables.
 
 ## PCA with prcomp
 
-Now we have a reasonably tidy dataframe, it's time to do the PCA! 
+Now we have a reasonably tidy dataset, it's time to do the PCA! 
 
-```{r pressure, echo=FALSE}
-plot(pressure)
+The first step is to go from our tidy narrow dataframe to a wide dataframe where each vertebral measurement (each variable we want to include in our PCA) has its own column. This is simple with the dplyr function **spread**.
+
+Note: we'll use the log10 transformed measurements, since PCA assumes each variable has a normal distribution. 
+
+```{r}
+wideData <- vertData %>% 
+  spread(key = measureName, value = logValue) #now each specimen has its own row with 9 vertebral measurements
+
+wideData
+```
+
+The PCA function I use is **prcomp** from base R. I assign the PCA results to a new object, vertPCA, and specify that the function use the measurement variables 6:14 in the wide column
+
+```{r}
+vertPCA <- prcomp(wideData[,6:14])
 ```
 
 Look at the PCA results
