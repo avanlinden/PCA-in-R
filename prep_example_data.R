@@ -4,8 +4,8 @@ library(tidyverse)
 
 # load data as a dplyr tibble
 
-vertData <- as_tibble(read.csv("ruminant_vert_morph_data.csv"))
-vertData
+vert_tbl <- as_tibble(read.csv("ruminant_vert_morph_data.csv"))
+vert_tbl
 
 abrev <- c("CH", "CL", "CW")
 fullname <- c("centrumHeight", "centrumLength", "centrumWidth")
