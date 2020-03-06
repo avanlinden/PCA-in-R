@@ -15,7 +15,7 @@ output:
 knitr::opts_chunk$set(echo = TRUE)
 ```
 
-
+## Friends Help Friends Use PCA
 
 PCA is an ordination method that allows you to identify the principal component axes that explain the greatest amount of variation among interrelated variables in your data. For PCA, you need continuous data (or something that your field considers continuous, like emotion intensity on a scale of 1-100 -- hi Madi!). There are other ordination analyses you can do with non-continuous data, but I'll focus on PCA here.
 
@@ -43,10 +43,10 @@ library(ggrepel)
 
 ### Load and view data
 
-Load the ruminant vertebral morphology data set (you can find it ) and format it as a tibble (a tibble is dplyr's version of a dataframe), then take a look at it.
+Load the [ruminant vertebral morphology data set](https://github.com/avanlinden/PCA-in-R/tree/master/data) and format it as a tibble (a tibble is dplyr's version of a dataframe), then take a look at it.
 
 
-```{r paged.print=TRUE}
+```{r paged.print=FALSE}
 vertData_tbl <- as_tibble(read.csv("data/ruminant_vert_morph_data.csv"))
 
 vertData_tbl
@@ -63,7 +63,7 @@ Before we do PCA, we can filter and tidy the data a bit with some easy-breezy dp
 
 We'll take the initial data and filter all rows that contain measurements from C2 -- the second cervical vertebra.
 
-```{r}
+```{r paged.print=FALSE}
 vertData_tbl %>%  # take our vertData_tbl 'and then' do the following:
   select(-X, -type, logBMSS) %>%  #remove columns we don't need for PCA
   filter(!is.na(value)) %>%  #remove NAs -- not necessary, prcomp will handle it, but nice to do
@@ -86,7 +86,7 @@ vertData_tbl %>%  # take our vertData_tbl 'and then' do the following:
 
 'What is a C2?', you reasonably ask as someone who hasn't spent five years staring at antelope neck bones. It looks like this:
 
-```{r, out.width = "400px"}
+```{r out.width=300}
 knitr::include_graphics("/Users/avanderlinden/Desktop/PCA-in-R/images/c2_measurements.png")
 ```
 <br>
@@ -94,7 +94,7 @@ knitr::include_graphics("/Users/avanderlinden/Desktop/PCA-in-R/images/c2_measure
 Vertebral morphology aside, using pipes allows me to tidy my data step by step without saving or rewriting the initial dataframe each time, so I can make sure all my filters work the way I want to. Once I have it in the version I want, I'll save it as a new object that we can use for the PCA.
 
 
-```{r paged.print=TRUE}
+```{r paged.print=FALSE}
 vertData <-
   vertData_tbl %>%  #all the same stuff as above, but now saving it as a new tibble
   select(-X, -type, logBMSS) %>%
@@ -148,7 +148,7 @@ The first step is to go from our tidy narrow dataframe to a wide dataframe where
 Note: we'll use the log10 transformed measurements, since PCA assumes each variable has a normal distribution. 
 
 
-```{r paged.print=TRUE}
+```{r paged.print=FALSE}
 wideData <- vertData %>% 
   spread(key = measureName, value = logValue) #now each specimen has its own row with 9 measurements
 
@@ -209,7 +209,7 @@ In my experience a lot of the value of a principal components analysis is that i
 I like to rejoin my PC scores for each specimen with the original dataframe, so that I can include things like the species name, sex, etc in the visualizations: 
 
 
-```{r paged.print=TRUE}
+```{r paged.print=FALSE}
 vertPCscores <- vertPCA$x %>% 
   as_tibble() %>% #convert PC scores (vertPCA$x) to tibble
   add_column(catNum = wideData$catNum) %>%  #add catalog numbers from df used for PCA (unique identifiers)
