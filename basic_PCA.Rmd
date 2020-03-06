@@ -9,7 +9,7 @@ output: html_document
 knitr::opts_chunk$set(echo = TRUE)
 ```
 
-### Principal Components Analysis
+# Principal Components Analysis
 
 PCA is an exploratory analysis that allows you to identify the ordination axes that explain the greatest amount of variation among interrelated variables in your data. For PCA, you need continuous data (or something that your field considers continuous, like emotion intensity on a scale of 1-100 -- hi Madi!). There are other ordination analyses you can do with non-continuous data, but I'll focus on PCA here.
 
@@ -17,18 +17,18 @@ We'll use a subset of the linear morphometric dataset from my paper on cervical 
 
 My question is: do species that ram horns head-on (ighorn sheep, bison, etc) have differently shaped cervical vertebrae than species that lock horns and wrestle (antelope, deer, etc)? My first step when analyzing these data is to peform a PCA in order to visualize the major axes of variation among and across these groups.
 
-# Load tidyverse library
+### Load tidyverse library
 
 The first step is to install the tidyverse packages if you haven't already, and then load the library. Tidyverse contains a lot of useful packages, including dplyr and ggplot2, which we will use here. [You should be friends with the tidyverse.](https://tidyverse.tidyverse.org/) 
 
 We'll also load the ggrepel library to help with label positioning in our plots later.
 
-```{r}
+```{r echo = FALSE}
 library(tidyverse)
 library(ggrepel)
 ```
 
-## Import and Tidying Data
+## Import and Tidy Data
 
 Load the ruminant vertebral morphology data set and format it as a tibble (a tibble is dplyr's version of a dataframe), then take a look at it.
 
@@ -40,7 +40,7 @@ vertData_tbl
 
 These data are a subset of my ruminant mammal linear morphometrics dataset -- basically, I spent months in museum basements measuring different parts of seven cervical vertebrae from 100+ individual sheep, goat, deer, and antelope skeletons. The measurement data (value) are identified by museum catalog numbers (catNum) and then by vertebra number (C2-C7), as well as which particular feature was measured (measure). I then joined the measurement data with other data for each individual, including body mass, sex, and fighting style. This subset includes animals from two fighting styles: ram and wrestle. 
 
-#Filter and rearrange data with dplyr and pipes
+### Filter and rearrange data with dplyr and pipes
 
 Before we do PCA, we can filter and tidy the data a bit with some easy-breezy dplyr functions. I like to use the pipe function (denoted by %>% ) from the magrittr package, because it lets me manipulate tibbles one step at a time without saving a new object every time. The ' %>% ' operator can be read as 'and then'; e.g., take an object 'and then' do something to it, 'and then' do something else to it. 
 
@@ -104,11 +104,11 @@ vertData %>%
 ```
 So we have 88 individuals, 40 species, and 9 variables.
 
-## PCA with prcomp
+## Perform the PCA
 
 Now we have a reasonably tidy dataset, it's time to do the PCA! 
 
-# Create a wide dataframe
+### Create a wide dataframe
 
 The first step is to go from our tidy narrow dataframe to a wide dataframe where each vertebral measurement (each variable we want to include in our PCA) has its own column. This is simple with the dplyr function spread().
 
@@ -121,7 +121,7 @@ wideData <- vertData %>%
 wideData
 ```
 
-# PCA with prcomp
+### PCA with prcomp
 
 The PCA function I use is **prcomp** from base R. I assign the PCA results to a new object, vertPCA, and specify that the function use the measurement variables 6:14 in the wide column
 
@@ -171,7 +171,7 @@ vertPCscores
 
 Now instead of our original measurement data, we have a dataframe of ruminant species with their principal component scores. On to plotting!
 
-# Plotting PCA scores with ggplot
+### Plotting PCA scores with ggplot
 
 I like to pipe my dataframe into a ggplot2 graphic because I can add different filters or manipulations before the plot and adjust as need.
 
@@ -184,7 +184,7 @@ Here's a basic scatterplot of PC1 vs PC2:
   theme_classic()
 ```
 
-# What's going on with body size?
+### What's going on with body size?
 
 Remember how PC1 accounts for ~90% of the variance? If we plot PC1 versus body mass, we see what's behind that.
 
@@ -210,7 +210,7 @@ vertPCscores %>%
 
 All other PCs except PC1 appear to be unrelated to body size, which means they will tell us more about non-size shape differences!
 
-# Colors, labels, and other fancy stuff
+### Colors, labels, and other fancy stuff
 
 I often find it useful to add colors and labels for both exploratory visualization of my PC data and later publication-quality figures. Here's a morphospace where the points are colored by fighting style:
 
@@ -246,7 +246,7 @@ Load ggfortify:
 library(ggfortify)
 ```
 
-# Autoplot with variable loadings
+### Autoplot with variable loadings
 
 We'll create an autoplot of PC2 vs PC3 for our data:
 
@@ -272,7 +272,7 @@ autoplot(
 
 Ok, now we have a lot of interesting information! We can see that several measures of width load on the positive end of the PC2 axis (centrum width, dens width, the distance/width between zygopophyses), while centrum length and neural spine length load towards the negative end of PC2. Based on our fighting style groups along PC2, it seems like rammers tend to have wider vertebrae than wrestlers, while wrestlers have longer vertebrae than rammers -- [which is basically the gist of my 2019 Proceedings B paper.](https://royalsocietypublishing.org/doi/full/10.1098/rspb.2019.2199)
 
-# Autoplot with convex hulls
+### Autoplot with convex hulls
 
 We can also add convex hulls to our PC plots through use of the 'frame' argument:
 ```{r}
@@ -339,4 +339,6 @@ I also usually opt not to perform a significance test, and just include examples
 
 ## More resources for information on PCA and other ordination methods:
 
+Lots of good information in the [vegan package](https://cran.r-project.org/web/packages/vegan/vignettes/intro-vegan.pdf)
 
+Good recent review paper by [Joliffe and Cadima](https://www.ncbi.nlm.nih.gov/pmc/articles/PMC4792409/)
