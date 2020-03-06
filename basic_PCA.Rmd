@@ -19,10 +19,11 @@ My question is: do species that ram horns head-on (ighorn sheep, bison, etc) hav
 
 ## Tidyverse library
 
-The first step is to install the tidyverse packages if you haven't already, and then load the library. Tidyverse contains a lot of useful packages, including dplyr and ggplot2, which we will use here.
+The first step is to install the tidyverse packages if you haven't already, and then load the library. Tidyverse contains a lot of useful packages, including dplyr and ggplot2, which we will use here. We'll also load the ggrepel library to help with label positioning in our plots later.
 
 ```{r}
 library(tidyverse)
+library(ggrepel)
 ```
 
 ## Loading and Tidying Data
@@ -184,3 +185,38 @@ vertPCscores %>%
 
 We could adjust for the influence of body size in our original data by regressing each measurement on body size and using the residuals from those regressions as input for the PCA. Or we can do like the old school morphologists used to do and just "discard" PC1 as a major axis of non-size shape variation, in favor of the subsequent PCs. 
 
+To confirm that body size is not an issue in subsequent PCs, we can do a quick scatterplot of size versus PC scores across all PCs (this is really just showing off the facet_wrap argument of ggplot2, which I **love** for exploratory data visualizations. Look how easily we can inspect all our PCs!)
+
+```{r}
+vertPCscores %>% 
+  gather(PC1:PC9, key = 'PC', value = "score") %>% #this is the opposite of spread; make a wide dataframe narrow
+  ggplot(aes(logBodyMass, score)) +
+  geom_point() +
+  facet_wrap(vars(PC)) + #add a facet for each PC we want to look at
+  theme_classic()
+```
+
+All other PCs except PC1 appear to be unrelated to body size, which means they will tell us more about non-size shape differences!
+
+I often find it useful to add colors and labels for both exploratory visualization of my PC data and later publication-quality figures. Here is a morphospace where the points are colored by fighting style:
+
+```{r}
+vertPCscores %>%   
+  ggplot(aes(x = PC2, y = PC3)) +
+  geom_point(aes(colour = fightStyle)) +
+  theme_classic()
+```
+
+In this case we can see that wrestlers tend to cluster towards the negative end of PC2, while rammers are more twoards the positive end. This is still exploratory -- there are other methods like discriminant function analysis for explicitly discriminating a priori groups, or testing whether groups are in fact different.
+
+If I don't have a thousand points in my analysis, I also like to add labels to identify species at the extremes of the morphospace: 
+
+```{r}
+vertPCscores %>%   
+  ggplot(aes(x = PC2, y = PC3)) +
+  geom_point(aes(colour = fightStyle)) +
+  theme_classic() +
+  geom_text_repel(aes(label = spp), size = 2)#the labels are messy but at this stage they can help you ID outliers, examine trends, etc
+```
+
+Again, obviously not publication-quality labels but it's useful to get to know the data. Saiga tatarica appears to be quite different from the other species here. [Go look at a saiga](https://animals.sandiegozoo.org/animals/saiga), they're adorable!
