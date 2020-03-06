@@ -86,7 +86,7 @@ vertData <-
 vertData #view the new tibble
 ```
 
-We now have a tibble with 792 rows and 7 columns. If we want we can examine the tibble with the function **distinct** to see how many variables we have and how many species we have.
+We now have a tibble with 792 rows and 7 columns. If we want we can examine the tibble with the function distinct() to see how many variables we have and how many species we have.
 
 ```{r}
 vertData %>% 
@@ -104,7 +104,7 @@ So we have 88 individuals, 40 species, and 9 variables.
 
 Now we have a reasonably tidy dataset, it's time to do the PCA! 
 
-The first step is to go from our tidy narrow dataframe to a wide dataframe where each vertebral measurement (each variable we want to include in our PCA) has its own column. This is simple with the dplyr function **spread**.
+The first step is to go from our tidy narrow dataframe to a wide dataframe where each vertebral measurement (each variable we want to include in our PCA) has its own column. This is simple with the dplyr function spread().
 
 Note: we'll use the log10 transformed measurements, since PCA assumes each variable has a normal distribution. 
 
@@ -183,7 +183,7 @@ vertPCscores %>%
   theme_classic()
 ```
 
-We could adjust for the influence of body size in our original data by regressing each measurement on body size and using the residuals from those regressions as input for the PCA. Or we can do like the old school morphologists used to do and just "discard" PC1 as a major axis of non-size shape variation, in favor of the subsequent PCs. 
+We could adjust for the influence of body size in our original data by regressing each measurement on body size and using the residuals from those regressions as input for the PCA. Or we can do like the old school morphologists used to do and just "discard" PC1 in favor of the subsequent PCs. 
 
 To confirm that body size is not an issue in subsequent PCs, we can do a quick scatterplot of size versus PC scores across all PCs (this is really just showing off the facet_wrap argument of ggplot2, which I **love** for exploratory data visualizations. Look how easily we can inspect all our PCs!)
 
@@ -198,7 +198,7 @@ vertPCscores %>%
 
 All other PCs except PC1 appear to be unrelated to body size, which means they will tell us more about non-size shape differences!
 
-I often find it useful to add colors and labels for both exploratory visualization of my PC data and later publication-quality figures. Here is a morphospace where the points are colored by fighting style:
+I often find it useful to add colors and labels for both exploratory visualization of my PC data and later publication-quality figures. Here's a morphospace where the points are colored by fighting style:
 
 ```{r}
 vertPCscores %>%   
@@ -219,4 +219,49 @@ vertPCscores %>%
   geom_text_repel(aes(label = spp), size = 2)#the labels are messy but at this stage they can help you ID outliers, examine trends, etc
 ```
 
-Again, obviously not publication-quality labels but it's useful to get to know the data. Saiga tatarica appears to be quite different from the other species here. [Go look at a saiga](https://animals.sandiegozoo.org/animals/saiga), they're adorable!
+Again, obviously not publication-quality labels but it's useful to get to know the data. **Saiga tatarica** appears to be quite different from the other species here. [Go look at a saiga](https://animals.sandiegozoo.org/animals/saiga), they're adorable!
+
+
+## Autoplotting PCA with ggfortify
+
+One thing we still haven't looked at is how much different variables contribute to each PC. There is a very basic biplot function in base R that works fine, but the ggfortify package is an extension of ggplot that has an even better autoplot function for PCA, including variable loading vectors.
+
+Load ggfortify:
+```{r}
+library(ggfortify)
+```
+
+We'll create an autoplot of PC2 vs PC3 for our data:
+```{r}
+autoplot(
+  vertPCA, #use the PCA object
+  data = wideData, #and the dataframe we made the PCA object from
+  col = "fightStyle", #color by fighting style
+  x = 2, #choose which PCs we want to plot on which axes -- the default will be PC1 vs PC2
+  y = 3,
+  loadings = TRUE, #add variable loadings and label them, adjust colors and sizes for best visual
+  loadings.label = TRUE,
+  loadings.colour = "darkgray",
+  loadings.label.colour = "black",
+  loadings.label.size = 3
+) +
+  theme_classic() # I just really prefer the classic theme for visual simplicity
+```
+
+Ok, now we have a lot of interesting information! We can see that several measures of width load on the positive end of the PC2 axis (centrum width, dens width, the distance/width between zygopophyses), while centrum length and neural spine length load towards the negative end of PC2. Based on our fighting style groups along PC2, it seems like rammers tend to have wider vertebrae than wrestlers, while wrestlers have longer vertebrae than rammers -- [which is basically the gist of my 2019 Proceedings B paper.](https://royalsocietypublishing.org/doi/full/10.1098/rspb.2019.2199)
+
+We can also add convex hulls to our PC plots through use of the 'frame' argument:
+```{r}
+autoplot(
+  vertPCA, #use the PCA object
+  data = wideData, #and the dataframe we made the PCA object from
+  col = "fightStyle", #color by fighting style
+  x = 2, #choose which PCs we want to plot on which axes -- the default will be PC1 vs PC2
+  y = 3,
+  frame = TRUE,
+  frame.type = "convex"
+) +
+  theme_classic()
+```
+
+The frames don't have any statistical meaning here, but they do help visually determine if our groups separate well or not. 
