@@ -120,20 +120,67 @@ The PCA function I use is **prcomp** from base R. I assign the PCA results to a 
 vertPCA <- prcomp(wideData[,6:14])
 ```
 
-Look at the PCA results
-```{r}
-summary(prcomp)
-```
+I know, that was a lot of buildup. Let's look at the PCA results!
 
 ```{r}
-scree plot
+summary(vertPCA)
+```
+
+This gives us a quick look at the standard deviation and proportion of variance explained by each component. In our case, since the measurement variables are not corrected by size and the sample has everything from pygmy antelopes to bison, PC1 explains ~90% of the variance and is dominated by size. This is expected for linear morphometric studies! PC2 explains ~5% of the variance, and PC3 explains ~3%, with each subsequent PC decreasing after that. All 9 PCs together explain 100% of the variance.
+
+A quick way to visually inspect the variance explained by each PC is with a screeplot; also handy if you're using the "broken-stick" criterion to select PCs of most importance.
+
+```{r}
+screeplot(vertPCA)
+```
+
+We can also look at some of the output of the PCA:
+
+```{r}
+vertPCA$rotation # this is the matrix of variable loadings (eigenvectors)
+
+vertPCA$x #this gives the PC scores for each specimen on each component (centered data multipled by the rotation matrix) (row numbers correspond to the initial data rows)
+
+vertPCA$sdev #standard deviations of each PC, aka square roots of eigenvalues
 ```
 
 ## Plotting PCA Results
+
+In my experience a lot of the value of a principal components analysis is that it allows you to visually explore axes of variation in your data. 
+
+I like to rejoin my PC scores for each specimen with the original dataframe, so that I can include things like the species name, sex, etc in the visualizations: 
+
 ```{r}
-regular plot
+vertPCscores <- vertPCA$x %>% 
+  as_tibble() %>% #convert PC scores (vertPCA$x) to tibble
+  add_column(catNum = wideData$catNum) %>%  #add catalog numbers from df used for PCA (unique identifiers)
+  right_join(wideData, by = 'catNum') %>% #rejoin the PC scores to wideData tibble
+  select(catNum:fightStyle, PC1:PC9) #select name, sex, fighting style columns and PC scores
+
+vertPCscores
 ```
+
+Now instead of our original measurement data, we have a dataframe of ruminant species with their principal component scores. On to plotting!
+
+I like to pipe my dataframe into a ggplot2 graphic because I can add different filters or manipulations before the plot and adjust as need.
+
+Here's a basic scatterplot of PC1 vs PC2:
+
 ```{r}
-autoplot fun stuff
+ vertPCscores %>%   
+  ggplot(aes(x = PC1, y = PC2)) +
+  geom_point() +
+  theme_classic()
 ```
+
+Remember how PC1 accounts for ~90% of the variance? If we plot PC1 versus body mass, we see what's behind that.
+
+```{r}
+vertPCscores %>%   
+  ggplot(aes(x = logBodyMass, y = PC1)) +
+  geom_point() +
+  theme_classic()
+```
+
+We could adjust for the influence of body size in our original data by regressing each measurement on body size and using the residuals from those regressions as input for the PCA. Or we can do like the old school morphologists used to do and just "discard" PC1 as a major axis of non-size shape variation, in favor of the subsequent PCs. 
 

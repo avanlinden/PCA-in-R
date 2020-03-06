@@ -10,6 +10,8 @@ wideData
 
 vertPCA <- prcomp(wideData[,6:14]) #perform the PCA on the measurement columns of the data frame
 
+str(vertPCA)
+
 summary(vertPCA) #this gives the variable loadings, SD, and proportion of variance for each component
 
 #in this case, since the variables are not corrected by size and the sample has everything from pygmy antelopes to bison, PC1 explains ~90% of the variance and is dominated by size

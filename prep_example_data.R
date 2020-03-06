@@ -31,5 +31,5 @@ vertData <- vertData %>%
 
 vertData #check tibble
 
-distinct(vertData, catNum)
+distinct(vertData, catNum, measure)
 
