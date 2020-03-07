@@ -128,15 +128,9 @@ vertData_tbl %>%  # take our vertData_tbl 'and then' do the following:
     ## # … with 782 more rows, and 1 more variable: measureName <chr>
 
 ‘What is a C2?’, you reasonably ask as someone who hasn’t spent five
-years staring at antelope neck bones. It looks like
-this:
+years staring at antelope neck bones. It looks like this:
 
-``` r
-knitr::include_graphics("/images/c2_measurements.png")
-```
-
-<img src="/Users/avanderlinden/Desktop/PCA-in-R/images/c2_measurements.png" width="300" />
-<br>
+<img src="images/c2_measurements.png" width="300" /> <br>
 
 Vertebral morphology aside, using pipes allows me to tidy my data step
 by step without saving or rewriting the initial dataframe each time, so
@@ -591,14 +585,9 @@ axis *in* the plot: for example, when I use high-dimensional 3D shape
 data, I add an image of the shape that would be found at the extreme of
 each PC to the morphospace plot.
 
-Here’s an example (Figure 2 from my Evolution
-paper):
+Here’s an example (Figure 2 from my Evolution paper):
 
-``` r
-knitr::include_graphics("/images/all-mammals-spharm-pca-plots.png")
-```
-
-<img src="/Users/avanderlinden/Desktop/PCA-in-R/images/all-mammals-spharm-pca-plots.png" width="400px" />
+<img src="images/all-mammals-spharm-pca-plots.png" width="400" />
 
 [The rest of this paper is
 here.](https://onlinelibrary.wiley.com/doi/full/10.1111/evo.13815)

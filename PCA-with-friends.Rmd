@@ -86,7 +86,7 @@ vertData_tbl %>%  # take our vertData_tbl 'and then' do the following:
 'What is a C2?', you reasonably ask as someone who hasn't spent five years staring at antelope neck bones. It looks like this:
 
 ```{r echo=FALSE, out.width=300}
-knitr::include_graphics("PCA-in-R/images/c2_measurements.png")
+knitr::include_graphics("images/c2_measurements.png")
 ```
 <br>
 
@@ -422,8 +422,8 @@ I also usually opt not to perform a significance test, and just include examples
 
 Here's an example (Figure 2 from my Evolution paper): 
 
-```{r echo=FALSE, out.width=}
-knitr::include_graphics("PCA-in-R/images/all-mammals-spharm-pca-plots.png")
+```{r echo=FALSE, out.width=400}
+knitr::include_graphics("images/all-mammals-spharm-pca-plots.png")
 ```
 
 [The rest of this paper is here.](https://onlinelibrary.wiley.com/doi/full/10.1111/evo.13815)
