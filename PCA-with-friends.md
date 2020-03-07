@@ -132,7 +132,7 @@ years staring at antelope neck bones. It looks like
 this:
 
 ``` r
-knitr::include_graphics("/Users/avanderlinden/Desktop/PCA-in-R/images/c2_measurements.png")
+knitr::include_graphics("/images/c2_measurements.png")
 ```
 
 <img src="/Users/avanderlinden/Desktop/PCA-in-R/images/c2_measurements.png" width="300" />
@@ -595,7 +595,7 @@ Here’s an example (Figure 2 from my Evolution
 paper):
 
 ``` r
-knitr::include_graphics("/Users/avanderlinden/Desktop/PCA-in-R/images/all-mammals-spharm-pca-plots.png")
+knitr::include_graphics("/images/all-mammals-spharm-pca-plots.png")
 ```
 
 <img src="/Users/avanderlinden/Desktop/PCA-in-R/images/all-mammals-spharm-pca-plots.png" width="400px" />
