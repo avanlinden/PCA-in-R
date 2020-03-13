@@ -163,18 +163,18 @@ vertData #view the new tibble
 ```
 
     ## # A tibble: 792 x 7
-    ##    catNum measureName   logValue sex   spp           logBodyMass fightStyle
-    ##    <fct>  <chr>            <dbl> <fct> <fct>               <dbl> <fct>     
-    ##  1 117402 centrumHeight     1.09 fema… Pseudois nay…        1.60 ram       
-    ##  2 122606 centrumHeight     1.64 fema… Bison bison          2.66 ram       
-    ##  3 123044 centrumHeight     1.44 male  Ovis dalli           1.91 ram       
-    ##  4 123092 centrumHeight     1.28 fema… Ovis dalli           1.73 ram       
-    ##  5 127195 centrumHeight     1.47 fema… Damaliscus l…        2.08 wrestle   
-    ##  6 127940 centrumHeight     1.60 fema… Hippotragus …        2.41 wrestle   
-    ##  7 127954 centrumHeight     1.18 fema… Litocranius …        1.54 wrestle   
-    ##  8 127980 centrumHeight     1.29 fema… Redunca redu…        1.61 wrestle   
-    ##  9 128002 centrumHeight     1.66 fema… Tragelaphus …        2.62 wrestle   
-    ## 10 13069  centrumHeight     1.43 male  Ammotragus l…        2.05 ram       
+    ##    catNum measureName   logValue sex    spp               logBodyMass fightStyle
+    ##    <fct>  <chr>            <dbl> <fct>  <fct>                   <dbl> <fct>     
+    ##  1 117402 centrumHeight     1.09 female Pseudois nayaur          1.60 ram       
+    ##  2 122606 centrumHeight     1.64 female Bison bison              2.66 ram       
+    ##  3 123044 centrumHeight     1.44 male   Ovis dalli               1.91 ram       
+    ##  4 123092 centrumHeight     1.28 female Ovis dalli               1.73 ram       
+    ##  5 127195 centrumHeight     1.47 female Damaliscus lunat…        2.08 wrestle   
+    ##  6 127940 centrumHeight     1.60 female Hippotragus equi…        2.41 wrestle   
+    ##  7 127954 centrumHeight     1.18 female Litocranius wall…        1.54 wrestle   
+    ##  8 127980 centrumHeight     1.29 female Redunca redunca          1.61 wrestle   
+    ##  9 128002 centrumHeight     1.66 female Tragelaphus oryx         2.62 wrestle   
+    ## 10 13069  centrumHeight     1.43 male   Ammotragus lervia        2.05 ram       
     ## # … with 782 more rows
 
 We now have a tibble with 792 rows and 7 columns. If we want we can
@@ -236,14 +236,14 @@ summary(vertPCA)
 ```
 
     ## Importance of components:
-    ##                           PC1     PC2     PC3     PC4     PC5     PC6
-    ## Standard deviation     0.4863 0.11655 0.07254 0.05185 0.04298 0.03680
-    ## Proportion of Variance 0.8977 0.05157 0.01998 0.01021 0.00701 0.00514
-    ## Cumulative Proportion  0.8977 0.94925 0.96923 0.97943 0.98645 0.99159
-    ##                            PC7     PC8     PC9
-    ## Standard deviation     0.03255 0.03051 0.01499
-    ## Proportion of Variance 0.00402 0.00353 0.00085
-    ## Cumulative Proportion  0.99561 0.99915 1.00000
+    ##                           PC1     PC2     PC3     PC4     PC5     PC6     PC7
+    ## Standard deviation     0.4863 0.11655 0.07254 0.05185 0.04298 0.03680 0.03255
+    ## Proportion of Variance 0.8977 0.05157 0.01998 0.01021 0.00701 0.00514 0.00402
+    ## Cumulative Proportion  0.8977 0.94925 0.96923 0.97943 0.98645 0.99159 0.99561
+    ##                            PC8     PC9
+    ## Standard deviation     0.03051 0.01499
+    ## Proportion of Variance 0.00353 0.00085
+    ## Cumulative Proportion  0.99915 1.00000
 
 This gives us a quick look at the standard deviation and proportion of
 variance explained by each component. In our case, since the measurement
@@ -300,20 +300,20 @@ vertPCscores
 ```
 
     ## # A tibble: 88 x 14
-    ##    catNum sex   spp   logBodyMass fightStyle     PC1     PC2      PC3
-    ##    <fct>  <fct> <fct>       <dbl> <fct>        <dbl>   <dbl>    <dbl>
-    ##  1 117402 fema… Pseu…        1.60 ram        -0.705   0.225  -0.0963 
-    ##  2 122606 fema… Biso…        2.66 ram         0.443   0.0925 -0.00355
-    ##  3 123044 male  Ovis…        1.91 ram         0.0516  0.113   0.0290 
-    ##  4 123092 fema… Ovis…        1.73 ram        -0.331   0.0883 -0.0786 
-    ##  5 127195 fema… Dama…        2.08 wrestle     0.0235 -0.0164  0.0156 
-    ##  6 127940 fema… Hipp…        2.41 wrestle     0.315  -0.0840  0.0305 
-    ##  7 127954 fema… Lito…        1.54 wrestle    -0.680  -0.256  -0.105  
-    ##  8 127980 fema… Redu…        1.61 wrestle    -0.525  -0.0376 -0.0507 
-    ##  9 128002 fema… Trag…        2.62 wrestle     0.506  -0.0551 -0.00802
-    ## 10 13069  male  Ammo…        2.05 ram         0.0267  0.0134 -0.0266 
-    ## # … with 78 more rows, and 6 more variables: PC4 <dbl>, PC5 <dbl>,
-    ## #   PC6 <dbl>, PC7 <dbl>, PC8 <dbl>, PC9 <dbl>
+    ##    catNum sex   spp   logBodyMass fightStyle     PC1     PC2      PC3      PC4
+    ##    <fct>  <fct> <fct>       <dbl> <fct>        <dbl>   <dbl>    <dbl>    <dbl>
+    ##  1 117402 fema… Pseu…        1.60 ram        -0.705   0.225  -0.0963   0.0230 
+    ##  2 122606 fema… Biso…        2.66 ram         0.443   0.0925 -0.00355  0.0248 
+    ##  3 123044 male  Ovis…        1.91 ram         0.0516  0.113   0.0290   0.00195
+    ##  4 123092 fema… Ovis…        1.73 ram        -0.331   0.0883 -0.0786   0.00670
+    ##  5 127195 fema… Dama…        2.08 wrestle     0.0235 -0.0164  0.0156   0.0270 
+    ##  6 127940 fema… Hipp…        2.41 wrestle     0.315  -0.0840  0.0305   0.00709
+    ##  7 127954 fema… Lito…        1.54 wrestle    -0.680  -0.256  -0.105    0.0298 
+    ##  8 127980 fema… Redu…        1.61 wrestle    -0.525  -0.0376 -0.0507  -0.00486
+    ##  9 128002 fema… Trag…        2.62 wrestle     0.506  -0.0551 -0.00802 -0.0572 
+    ## 10 13069  male  Ammo…        2.05 ram         0.0267  0.0134 -0.0266   0.0470 
+    ## # … with 78 more rows, and 5 more variables: PC5 <dbl>, PC6 <dbl>, PC7 <dbl>,
+    ## #   PC8 <dbl>, PC9 <dbl>
 
 Now instead of our original measurement data, we have a dataframe of
 ruminant species with their principal component scores. On to plotting\!
